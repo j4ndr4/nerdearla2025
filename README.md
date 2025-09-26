@@ -55,5 +55,6 @@ This PHP application allows users to log in using Google OAuth and access their 
 - Never commit the `.env` file to version control.
 - Use HTTPS in production.
 - Regularly rotate your API keys.
-- [TODO] move the .env file outside the web root (use a changeable path in the source code) or disable access to the .env file.
+- [TODO] move the .env file outside the webroot (use a changeable path in the source code) or disable access to the .env file.
 - Don't allow the web server to serve content from the resources folder.
+- Remove userList.php from the webroot after using it to generate the list.
