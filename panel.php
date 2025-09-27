@@ -146,7 +146,7 @@ try {
     </template>
     <template id="work-template">
         <div class="work-card">
-            <p>Trabajo: <span class="work-title"></span> <a href="" class="work-link" target="_blank"> (Ver en Classroom)</a></p>
+            <p>Trabajo: <span class="work-title"></span> <a href="" class="work-link" target="_blank"> (Ver en Classroom ⤴️)</a></p>
             <p>Estado: <span class="work-state"></span></p>
         </div>
     </template>
@@ -155,7 +155,7 @@ try {
         let stateTable = { 
                             'CREATED' : 'No entregado'
                             , 'RECLAIMED_BY_STUDENT' : 'Reclamado'
-                            , 'CORRECTED' : 'Corregido'
+                            , 'RETURNED' : 'Corregido'
                             , 'TURNED_IN' : 'Entregado a tiempo'
                             , 'TURNED_IN_LATE' : 'Entregado con retraso' };
 
@@ -261,9 +261,9 @@ try {
                         document.getElementById('course-turned-in-works').textContent = totalTurnedIn;
                         document.getElementById('course-turned-in-works-percent').textContent =  Math.round ( totalTurnedIn * 100 / totalStates ) ;
                         const pieData = {
-                            labels: [stateTable.CREATED, stateTable.RECLAIMED_BY_STUDENT, stateTable.CORRECTED, stateTable.TURNED_IN, stateTable.TURNED_IN_LATE],
+                            labels: [stateTable.CREATED, stateTable.RECLAIMED_BY_STUDENT, stateTable.RETURNED, stateTable.TURNED_IN, stateTable.TURNED_IN_LATE],
                             datasets: [{
-                                data: [ data.states.CREATED, data.states.RECLAIMED_BY_STUDENT, data.states.CORRECTED, data.states.TURNED_IN, data.states.TURNED_IN_LATE],
+                                data: [ data.states.CREATED, data.states.RECLAIMED_BY_STUDENT, data.states.RETURNED, data.states.TURNED_IN, data.states.TURNED_IN_LATE],
                                 backgroundColor: ['#F44336', '#FFC107', '#4CAF50', '#2196F3', '#9C27B0']
                             }]
                         };
@@ -285,7 +285,7 @@ try {
                                 data: [],
                                 backgroundColor: '#FFC107'
                             }, {
-                                label: stateTable.CORRECTED,
+                                label: stateTable.RETURNED,
                                 data: [],
                                 backgroundColor: '#4CAF50'
                             }, {
@@ -337,7 +337,7 @@ try {
                                 data: [],
                                 backgroundColor: '#FFC107'
                             }, {
-                                label: stateTable.CORRECTED,
+                                label: stateTable.RETURNED,
                                 data: [],
                                 backgroundColor: '#4CAF50'
                             }, {
@@ -383,6 +383,11 @@ try {
                                 workTemplate.querySelector('.work-title').textContent = sanitizeInput(group.students[studentIds[j]].works[k].title);
                                 workTemplate.querySelector('.work-state').textContent = stateTable[group.students[studentIds[j]].works[k].state];
                                 workTemplate.querySelector('.work-link').href = sanitizeUrl(group.students[studentIds[j]].works[k].link);
+                                if (group.students[studentIds[j]].works[k].state == 'RETURNED') {
+                                    workTemplate.querySelector('.work-card').classList.add('work-link-corrected');
+                                } else if (group.students[studentIds[j]].works[k].state == 'TURNED_IN' || group.students[studentIds[j]].works[k].state == 'TURNED_IN_LATE') {
+                                    workTemplate.querySelector('.work-card').classList.add('work-link-turned-in');
+                                }
                                 studentTemplate.querySelector('.student-works').appendChild(workTemplate);
                             }
                             document.getElementById('students').appendChild(studentTemplate);
@@ -425,7 +430,7 @@ try {
                                 data: [],
                                 backgroundColor: '#FFC107'
                             }, {
-                                label: stateTable.CORRECTED,
+                                label: stateTable.RETURNED,
                                 data: [],
                                 backgroundColor: '#4CAF50'
                             }, {

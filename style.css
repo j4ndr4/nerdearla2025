@@ -275,8 +275,17 @@ h1 {
 
 #course-charts h2, #course-charts p {
     text-align: left;
+}
 
+.work-link-corrected {
+    background-color: #b3e8a8;
+    border: 1px solid #85aa83;
+}
 
+.work-link-turned-in {
+    background-color: #d9f2f9;
+    border: 1px solid #bdd5e3;
+}
 
 /* Responsive design for student cards */
 @media (max-width: 768px) {

@@ -113,8 +113,18 @@ try {
                     ];
                 }
                 if ( !isset($tempGroups[$subGroup]['students'][$submission->getUserId()])) {
+                    // Fetch student profile to get the name
+                    try {
+                        $studentProfile = $service->userProfiles->get($submission->getUserId());
+                        $studentName = $studentProfile->getName()->getFullName();
+                    } catch (Exception $e) {
+                        // Fallback to userId if profile can't be fetched
+                        $studentName = $submission->getUserId();
+                    }
+
                     $tempGroups[$subGroup]['students'][$submission->getUserId()] = [
-                        'name' => $submission->getUserId(),
+                        'name' => $studentName,
+                        'userId' => $submission->getUserId(),
                         'works' => []
                     ];
                 }
