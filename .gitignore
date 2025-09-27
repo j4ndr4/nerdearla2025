@@ -2,3 +2,4 @@
 .env
 /resources/roles.csv
 /resources/groups.csv
+composer.lock

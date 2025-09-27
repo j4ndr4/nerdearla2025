@@ -5,7 +5,7 @@
 $errorMessage = 'Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde.';
 
 // Get error code if provided
-$errorCode = intval($_GET['code']) ?? 500;
+$errorCode = isset($_GET['code']) ? intval($_GET['code']) : 500;
 
 // Set HTTP status code
 http_response_code($errorCode);

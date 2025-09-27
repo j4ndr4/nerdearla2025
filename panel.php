@@ -136,6 +136,13 @@ try {
         let groupBarChart;
         let groupInfo;
 
+        function sanitizeInput(input) {
+            return input
+                .trim() // Remove whitespace
+                .replace(/[<>]/g, '') // Remove potential HTML tags
+                .substring(0, 100); // Limit length
+        }
+
         function showLoading() {
                 document.getElementById('loading').style.display = 'block';
         }
@@ -305,8 +312,8 @@ try {
 
                         // Create a new option element
                         let option = document.createElement('option');
-                        option.value = group.title;
-                        option.textContent = group.title;
+                        option.value = sanitizeInput(group.title);
+                        option.textContent = sanitizeInput(group.title);
                         document.getElementById('group-select').appendChild( option );
 
                         groupBarData.labels.push( group.title);
