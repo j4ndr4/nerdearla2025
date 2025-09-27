@@ -26,12 +26,47 @@ h1 {
     font-size: 2.5rem;
 }
 
-/* Student and Work Cards */
-#students {
-    margin-top: 30px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+/* Student Filters */
+.student-filters {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
+    align-items: end;
+    margin-top: 20px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.filter-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #007bff;
+    font-size: 0.9rem;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: white;
+    font-size: 1rem;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .student-card {
@@ -62,6 +97,36 @@ h1 {
     margin-top: 15px;
     border-top: 1px solid #e0e0e0;
     padding-top: 15px;
+}
+
+/* Student Card Header and Toggle Button */
+.student-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.toggle-details-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-details-btn:hover {
+    background-color: #0056b3;
+}
+
+.toggle-details-btn:active {
+    transform: translateY(1px);
 }
 
 .work-card {
@@ -277,6 +342,10 @@ h1 {
     text-align: left;
 }
 
+#course-charts p {
+    width: 33%;
+}
+
 .work-link-corrected {
     background-color: #b3e8a8;
     border: 1px solid #85aa83;
@@ -297,14 +366,26 @@ h1 {
         padding: 15px;
     }
 
-    .selects {
+    .student-filters {
         flex-direction: column;
         align-items: stretch;
     }
 
-    .selects select {
+    .filter-group {
         min-width: auto;
         width: 100%;
+    }
+
+    .student-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .toggle-details-btn {
+        align-self: flex-end;
+        width: 100%;
+        max-width: 160px;
     }
 
     .chart-container {

@@ -127,7 +127,40 @@ try {
                 </div>
             </div>
 
-            <div id="students">  
+            <div class="student-filters">
+                    <div class="filter-group">
+                        <label for="student-search">Buscar estudiante:</label>
+                        <input type="text" id="student-search" placeholder="Nombre del estudiante..." onkeyup="filterStudents()">
+                    </div>
+                    <div class="filter-group" style="display: none;">
+                        <label for="status-filter">Filtrar por estado:</label>
+                        <select id="status-filter" onchange="filterStudents()">
+                            <option value="all">Todos los estados</option>
+                            <option value="corrected">Corregidos</option>
+                            <option value="turned-in">Entregados (sin corregir)</option>
+                            <option value="not-turned-in">No entregados</option>
+                            <option value="mixed">Estado mixto</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="work-filter">Filtrar por trabajo:</label>
+                        <select id="work-filter" onchange="filterStudents()">
+                            <option value="all">Todos los trabajos</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="work-status-filter">Estado del trabajo:</label>
+                        <select id="work-status-filter" onchange="filterStudents()">
+                            <option value="all">Todos los estados</option>
+                            <option value="corrected">Corregido</option>
+                            <option value="turned-in">Entregado</option>
+                            <option value="not-turned-in">No entregado</option>
+                            <option value="reclaimed">Reclamado</option>
+                        </select>
+                    </div>
+                </div>
+            <div id="students" style="display: none;">
+                
             </div>
         </div>
 
@@ -138,9 +171,12 @@ try {
 
     <template id="student-template">
         <div class="student-card">
-            <p>Estudiante: <span class="student-name"></span></p>
-            <p>Grupo: <span class="student-group"></span></p>
-            <div class="student-works">
+            <div class="student-header">
+                <p>Estudiante: <span class="student-name"></span></p>
+                <p>Grupo: <span class="student-group"></span></p>
+                <button class="toggle-details-btn" onclick="toggleStudentDetails(this)">Mostrar detalles</button>
+            </div>
+            <div class="student-works" style="display: none;">
             </div>
         </div>
     </template>
@@ -163,6 +199,7 @@ try {
         let workBarChart;
         let groupBarChart;
         let groupInfo;
+        let worksData;
 
         function sanitizeInput(input) {
             return input
@@ -229,6 +266,14 @@ try {
             for (let i = document.getElementById('group-select').options.length - 1; i > 0; i--) {
                         document.getElementById('group-select').remove(i);
             }
+            
+            // Reset work filter
+            const workFilter = document.getElementById('work-filter');
+            while (workFilter.options.length > 1) {
+                workFilter.remove(1);
+            }
+            workFilter.value = 'all';
+            document.getElementById('work-status-filter').value = 'all';
 
             if (courseId) {
                 document.getElementById('course-name').textContent = document.getElementById('course-select').options[document.getElementById('course-select').selectedIndex].text;
@@ -319,8 +364,23 @@ try {
                             }
                         });
 
+                        // Populate work filter dropdown
+                        worksData = data.works;
+                        const workFilter = document.getElementById('work-filter');
+                        // Clear existing options except "All works"
+                        while (workFilter.options.length > 1) {
+                            workFilter.remove(1);
+                        }
+                        // Add works to dropdown
+                        for (let i = 0; i < data.works.length; i++) {
+                            const option = document.createElement('option');
+                            option.value = i; // Use index as value
+                            option.textContent = sanitizeInput(data.works[i].title);
+                            workFilter.appendChild(option);
+                        }
 
                         document.getElementById('course-charts').style.display = 'block';
+                        document.getElementById('students').style.display = 'block';
                     }
                     else {
                         document.getElementById('no-data').style.display = 'block';
@@ -490,9 +550,9 @@ try {
                     else {
                         document.getElementById('students').children[i].style.display = 'none';
                     }
-                }
-                    
+                }       
             }
+            filterStudents();
 
             groupBarChart = new Chart(document.getElementById('group-bar-chart'), {
                         type: 'bar',
@@ -507,6 +567,114 @@ try {
                     });
         }
        
+        function toggleStudentDetails(button) {
+            const studentCard = button.closest('.student-card');
+            const studentWorks = studentCard.querySelector('.student-works');
+            
+            if (studentWorks.style.display === 'none' || studentWorks.style.display === '') {
+                studentWorks.style.display = 'block';
+                button.textContent = 'Ocultar detalles';
+            } else {
+                studentWorks.style.display = 'none';
+                button.textContent = 'Mostrar detalles';
+            }
+        }
+
+        function filterStudents() {
+            const searchTerm = document.getElementById('student-search').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const workFilterIndex = document.getElementById('work-filter').value;
+            const workStatusFilter = document.getElementById('work-status-filter').value;
+            const studentCards = document.querySelectorAll('.student-card');
+            const groupLabel = document.getElementById('group-select').value;
+
+            studentCards.forEach(card => {
+                const studentName = card.querySelector('.student-name').textContent.toLowerCase();
+                const workCards = card.querySelectorAll('.work-card');
+                
+                // Check name filter
+                const nameMatch = studentName.includes(searchTerm);
+                
+                // Check status filter (overall student status)
+                let statusMatch = true;
+                if (statusFilter !== 'all') {
+                    let hasCorrected = false;
+                    let hasTurnedIn = false;
+                    let hasNotTurnedIn = false;
+                    
+                    workCards.forEach(workCard => {
+                        const state = workCard.querySelector('.work-state').textContent;
+                        if (state === 'Corregido') {
+                            hasCorrected = true;
+                        } else if (state === 'Entregado a tiempo' || state === 'Entregado con retraso') {
+                            hasTurnedIn = true;
+                        } else if (state === 'No entregado' || state === 'Reclamado') {
+                            hasNotTurnedIn = true;
+                        }
+                    });
+                    
+                    switch (statusFilter) {
+                        case 'corrected':
+                            statusMatch = hasCorrected && !hasNotTurnedIn;
+                            break;
+                        case 'turned-in':
+                            statusMatch = hasTurnedIn && !hasCorrected && !hasNotTurnedIn;
+                            break;
+                        case 'not-turned-in':
+                            statusMatch = hasNotTurnedIn && !hasCorrected && !hasTurnedIn;
+                            break;
+                        case 'mixed':
+                            statusMatch = (hasCorrected && hasTurnedIn) || (hasCorrected && hasNotTurnedIn) || (hasTurnedIn && hasNotTurnedIn);
+                            break;
+                    }
+                }
+
+                // Check work-specific filter
+                let workMatch = true;
+                if (workFilterIndex !== 'all' && workStatusFilter !== 'all') {
+                    workMatch = false;
+                    const targetWorkTitle = worksData[parseInt(workFilterIndex)].title;
+                    
+                    workCards.forEach(workCard => {
+                        const workTitle = workCard.querySelector('.work-title').textContent;
+                        const workState = workCard.querySelector('.work-state').textContent;
+                        
+                        if (workTitle === targetWorkTitle) {
+                            let statusMatches = false;
+                            switch (workStatusFilter) {
+                                case 'corrected':
+                                    statusMatches = workState === 'Corregido';
+                                    break;
+                                case 'turned-in':
+                                    statusMatches = workState === 'Entregado a tiempo' || workState === 'Entregado con retraso';
+                                    break;
+                                case 'not-turned-in':
+                                    statusMatches = workState === 'No entregado';
+                                    break;
+                                case 'reclaimed':
+                                    statusMatches = workState === 'Reclamado';
+                                    break;
+                            }
+                            if (statusMatches) {
+                                workMatch = true;
+                            }
+                        }
+                    });
+                }
+
+                let groupMatch = true;
+                if (groupLabel !== 'all') {
+                    groupMatch = card.querySelector('.student-group').textContent === groupLabel;
+                }
+                
+                // Show/hide card based on filters
+                if (nameMatch && statusMatch && workMatch && groupMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
     </script>
 </body>
 </html>
