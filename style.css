@@ -26,6 +26,79 @@ h1 {
     font-size: 2.5rem;
 }
 
+/* Student and Work Cards */
+#students {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.student-card {
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.student-card p {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.student-name {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.student-group {
+    color: #666;
+    font-style: italic;
+}
+
+.student-works {
+    margin-top: 15px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+}
+
+.work-card {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.work-card p {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.work-title {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.work-state {
+    color: #666;
+    font-style: italic;
+}
+
+.work-link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.work-link:hover {
+    text-decoration: underline;
+}
+
+
 /* Buttons */
 .login-btn, .logout-btn {
     display: inline-block;
@@ -108,6 +181,11 @@ h1 {
     font-size: 1.1rem;
 }
 
+.notification-text {
+    border-bottom: 1px solid gainsboro;
+    padding-bottom: 10px;
+}
+
 .notification-date, .material-date, .course-work-date {
     color: #666;
     font-size: 0.9rem;
@@ -118,6 +196,8 @@ h1 {
     color: #007bff;
     text-decoration: none;
     font-weight: 500;
+    display: flex;
+    float: right;
 }
 
 .notification-description, .material-description, .course-work-description {
@@ -125,6 +205,8 @@ h1 {
     font-size: 1rem;
     color: #666;
     white-space: pre-wrap;
+    border-bottom: 1px solid gainsboro;
+    padding-bottom: 10px;
 }
 
 .notification-link:hover, .material-link:hover, .course-work-link:hover {
@@ -163,7 +245,7 @@ h1 {
     border-radius: 5px;
     background-color: white;
     font-size: 1rem;
-    min-width: 200px;
+    min-width: 370px;
 }
 
 .charts {
@@ -195,8 +277,17 @@ h1 {
     text-align: left;
 
 
-/* Responsive design for panel */
+
+/* Responsive design for student cards */
 @media (max-width: 768px) {
+    #students {
+        grid-template-columns: 1fr;
+    }
+
+    .student-card {
+        padding: 15px;
+    }
+
     .selects {
         flex-direction: column;
         align-items: stretch;

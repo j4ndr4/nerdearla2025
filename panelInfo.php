@@ -84,13 +84,20 @@ try {
             ]
         ];
 
+        $statesTable = [
+            'TURNED_IN' => 'TURNED_IN',
+            'NEW' => 'CREATED',
+            'RETURNED' => 'RETURNED',
+            'CREATED' => 'CREATED',
+            'RECLAIMED_BY_STUDENT' => 'RECLAIMED_BY_STUDENT'
+        ];
+            
         try {
             // Fetch student submissions for this work
             $submissions = $service->courses_courseWork_studentSubmissions->listCoursesCourseWorkStudentSubmissions($courseId, $workId);
             $submissionList = $submissions->getStudentSubmissions();
 
             foreach ($submissionList as $submission) {
-
                 $subGroup =$groupClass->getUserGroup($courseId, $submission->getUserId());
                 if ( !isset($tempGroups[$subGroup])) {
                     $tempGroups[$subGroup] = [
@@ -101,28 +108,35 @@ try {
                             'RETURNED' => 0,
                             'CREATED' => 0,
                             'RECLAIMED_BY_STUDENT' => 0
-                        ]
+                        ],
+                        'students' => []
                     ];
                 }
-                $state = $submission->getState();
+                if ( !isset($tempGroups[$subGroup]['students'][$submission->getUserId()])) {
+                    $tempGroups[$subGroup]['students'][$submission->getUserId()] = [
+                        'name' => $submission->getUserId(),
+                        'works' => []
+                    ];
+                }
+                $state = $statesTable[$submission->getState()];
                 $late = $submission->getLate();
 
+
                 if ($state === 'TURNED_IN' && $late) {
-                    $workData['states']['TURNED_IN_LATE']++;
-                    $data['states']['TURNED_IN_LATE']++;
-                    $tempGroups[$subGroup]['states']['TURNED_IN_LATE']++;
-                } 
-                else if ($state === 'NEW') {
-                    $workData['states']['CREATED']++;
-                    $data['states']['CREATED']++;
-                    $tempGroups[$subGroup]['states']['CREATED']++;
+                    $state = 'TURNED_IN_LATE';
                 }
-                else {
-                    $workData['states'][$state]++;
-                    $data['states'][$state]++;
-                    $tempGroups[$subGroup]['states'][$state]++;
-                }
+                
+                $workData['states'][$state]++;
+                $data['states'][$state]++;
+                $tempGroups[$subGroup]['states'][$state]++;
+                
                 $data['totalSubmissions']++;
+                $tempGroups[$subGroup]['students'][$submission->getUserId()]['works'][] = [
+                    'link' => $submission->getAlternateLink(),
+                    'title' => $workTitle,
+                    'state' => $state,
+                    //'late' => $late
+                ];
             }
         } catch (Exception $e) {
             $workData['error'] = $e->getMessage();

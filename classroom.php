@@ -109,14 +109,14 @@ try {
     <template id="notification-template">  
         <div class="notification">
             <p class="notification-text"></p>
-            <p><a href=""  class="notification-link" target="_blank">Ver en Classroom ⤴️</a> | Fecha de creación: <span class="notification-date"></span></p>
+            <p><a href=""  class="notification-link" target="_blank">Ver en Classroom ⤴️</a>Fecha de creación: <span class="notification-date"></span></p>
         </div>
     </template>
     <template id="material-template">
         <div class="material">
             <p class="material-title"></p>
             <p class="material-description"></p>
-            <p><a href="" class="material-link" target="_blank">Ver en Classroom ⤴️</a> | Fecha de creación: <span class="material-date"></span></p>
+            <p><a href="" class="material-link" target="_blank">Ver en Classroom ⤴️</a>Fecha de creación: <span class="material-date"></span></p>
             
         </div>
     </template>
@@ -124,7 +124,7 @@ try {
         <div class="course-work">
             <p class="course-work-title"></p>
             <p class="course-work-description"></p>
-            <p><a href="" class="course-work-link" target="_blank">Ver en Classroom ⤴️</a> | Fecha de creación: <span class="course-work-date"></span></p>
+            <p><a href="" class="course-work-link" target="_blank">Ver en Classroom ⤴️</a>Fecha de creación: <span class="course-work-date"></span></p>
             
         </div>
     </template>
