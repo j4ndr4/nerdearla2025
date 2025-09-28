@@ -59,7 +59,7 @@ try {
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -352,6 +352,7 @@ try {
                             workBarData.datasets[3].data.push(work.states.TURNED_IN);
                             workBarData.datasets[4].data.push(work.states.TURNED_IN_LATE);
                         }
+                        document.getElementById('work-bar-chart').style.maxHeight = ( 100 * data.works.length )+'px';
                         workBarChart = new Chart(document.getElementById('work-bar-chart'), {
                             type: 'bar',
                             data: workBarData,
@@ -454,6 +455,7 @@ try {
                         }
                     }
                     
+                    document.getElementById('group-bar-chart').style.maxHeight = ( 100 * data.groups.length )+'px';
                     groupBarChart = new Chart(document.getElementById('group-bar-chart'), {
                         type: 'bar',
                         data: groupBarData,
@@ -554,6 +556,7 @@ try {
             }
             filterStudents();
 
+            document.getElementById('group-bar-chart').style.maxHeight = ( 100 * ( groupIndex === -1 ? groupInfo.length : 1 ) )+'px';
             groupBarChart = new Chart(document.getElementById('group-bar-chart'), {
                         type: 'bar',
                         data: groupBarData,
@@ -604,11 +607,11 @@ try {
                     
                     workCards.forEach(workCard => {
                         const state = workCard.querySelector('.work-state').textContent;
-                        if (state === 'Corregido') {
+                        if (state === stateTable.RETURNED) {
                             hasCorrected = true;
-                        } else if (state === 'Entregado a tiempo' || state === 'Entregado con retraso') {
+                        } else if (state === stateTable.TURNED_IN || state === stateTable.TURNED_IN_LATE) {
                             hasTurnedIn = true;
-                        } else if (state === 'No entregado' || state === 'Reclamado') {
+                        } else if (state === stateTable.CREATED || state === stateTable.RECLAIMED_BY_STUDENT) {
                             hasNotTurnedIn = true;
                         }
                     });
@@ -643,16 +646,16 @@ try {
                             let statusMatches = false;
                             switch (workStatusFilter) {
                                 case 'corrected':
-                                    statusMatches = workState === 'Corregido';
+                                    statusMatches = workState === stateTable.RETURNED;
                                     break;
                                 case 'turned-in':
-                                    statusMatches = workState === 'Entregado a tiempo' || workState === 'Entregado con retraso';
+                                    statusMatches = workState === stateTable.TURNED_IN || workState === stateTable.TURNED_IN_LATE;
                                     break;
                                 case 'not-turned-in':
-                                    statusMatches = workState === 'No entregado';
+                                    statusMatches = workState === stateTable.CREATED;
                                     break;
                                 case 'reclaimed':
-                                    statusMatches = workState === 'Reclamado';
+                                    statusMatches = workState === stateTable.RECLAIMED_BY_STUDENT;
                                     break;
                             }
                             if (statusMatches) {
