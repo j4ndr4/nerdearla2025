@@ -12,7 +12,8 @@ $dotenv->load();
 // Check if user is logged in
 if (!isset($_SESSION['access_token'])) {
     http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized']);
+    //echo json_encode(['error' => 'Unauthorized']);
+    include ('error.php');
     exit();
 }
 
