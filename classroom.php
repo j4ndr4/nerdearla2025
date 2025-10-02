@@ -67,9 +67,25 @@ try {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu" id="hamburger-menu">
+        <div class="hamburger-icon" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="menu-content" id="menu-content">
+            <div class="menu-header">
+                <h3>Hola <?php echo htmlspecialchars($_SESSION['email']);?></h3>
+            </div>
+            <div class="menu-options">
+                <a href="logout.php" class="menu-option">Logout</a>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <h1>Tu Google Classroom</h1>
-        <h2>Hola <?php echo htmlspecialchars($_SESSION['email']);?></h2>
         
         <?php if (empty($courses)): ?>
             <p>No hay clases.</p>
@@ -103,8 +119,10 @@ try {
             </div>
        
         <?php endif; ?>
-        <a href="logout.php" class="logout-btn">Logout</a>
     </div>
+
+    <!-- Floating Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()">↑</button>
 
     <template id="notification-template">  
         <div class="notification">
@@ -252,3 +270,34 @@ try {
         }
     }   
 </script>
+
+<script>
+    // Hamburger menu functionality
+    function toggleMenu() {
+        const menu = document.getElementById('hamburger-menu');
+        const menuContent = document.getElementById('menu-content');
+        menu.classList.toggle('active');
+        menuContent.classList.toggle('show');
+    }
+
+    // Scroll to top functionality
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    // Show/hide scroll to top button based on scroll position
+    window.addEventListener('scroll', function() {
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        if (window.pageYOffset > 300) {
+            scrollToTopBtn.style.display = 'block';
+        } else {
+            scrollToTopBtn.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>

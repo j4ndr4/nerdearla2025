@@ -68,9 +68,25 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu" id="hamburger-menu">
+        <div class="hamburger-icon" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="menu-content" id="menu-content">
+            <div class="menu-header">
+                <h3>Hola <?php echo htmlspecialchars($_SESSION['email']);?></h3>
+            </div>
+            <div class="menu-options">
+                <a href="logout.php" class="menu-option">Logout</a>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <h1>Panel de Análisis</h1>
-        <h2>Hola <?php echo htmlspecialchars($_SESSION['email']);?></h2>
 
         <div class="selects">
             <label for="course-select">Selecciona una clase:</label>
@@ -163,16 +179,16 @@ try {
                 
             </div>
         </div>
-
-        
-
-        <a href="logout.php" class="logout-btn">Logout</a>
     </div>
+
+       <!-- Floating Scroll to Top Button -->
+       <button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()">↑</button>
+
 
     <template id="student-template">
         <div class="student-card">
             <div class="student-header">
-                <p>Estudiante: <span class="student-name"></span></p>
+                <p>Estudiante: <span class="student-name"></span> <a class="student-email" target="_blank">(Mandar un mensaje ⤴️)</a></p>
                 <p>Grupo: <span class="student-group"></span></p>
                 <button class="toggle-details-btn" onclick="toggleStudentDetails(this)">Mostrar detalles</button>
             </div>
@@ -188,7 +204,7 @@ try {
     </template>
     <script>
 
-        let stateTable = { 
+        const stateTable = { 
                             'CREATED' : 'No entregado'
                             , 'RECLAIMED_BY_STUDENT' : 'Reclamado'
                             , 'RETURNED' : 'Corregido'
@@ -437,8 +453,8 @@ try {
                             let studentTemplate = document.getElementById('student-template').content.cloneNode(true);
                             studentTemplate.querySelector('.student-name').textContent = sanitizeInput(group.students[studentIds[j]].name);
                             studentTemplate.querySelector('.student-group').textContent  = sanitizeInput(group.title);
-                            //studentTemplate.querySelector('.group-date').textContent = group.creationTime;
-
+                            studentTemplate.querySelector('.student-email').setAttribute('href', 'sendMail.php?userId=' +  sanitizeInput(group.students[studentIds[j]].userId)+'&subject='+ encodeURIComponent ("Seguimiento de entrega de trabajo: " + document.getElementById('course-select').options[document.getElementById('course-select').selectedIndex].text));
+                            
                             for (let k = 0; k < group.students[studentIds[j]].works.length; k++) {
                                 let workTemplate = document.getElementById('work-template').content.cloneNode(true);
                                 workTemplate.querySelector('.work-title').textContent = sanitizeInput(group.students[studentIds[j]].works[k].title);
@@ -679,5 +695,33 @@ try {
             });
         }
     </script>
+
+<script>
+    // Hamburger menu functionality
+    function toggleMenu() {
+        const menu = document.getElementById('hamburger-menu');
+        const menuContent = document.getElementById('menu-content');
+        menu.classList.toggle('active');
+        menuContent.classList.toggle('show');
+    }
+
+    // Scroll to top functionality
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    // Show/hide scroll to top button based on scroll position
+    window.addEventListener('scroll', function() {
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        if (window.pageYOffset > 300) {
+            scrollToTopBtn.style.display = 'block';
+        } else {
+            scrollToTopBtn.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>
