@@ -5,7 +5,7 @@ This PHP application allows users to log in using Google OAuth and access their 
 ## Setup
 
 1. **Install Dependencies:**
-   Run `composer install` to install the required PHP packages.
+   - Run `composer install` to install the required PHP packages.
 
 2. **Google API Setup:**
    - Go to the [Google Cloud Console](https://console.cloud.google.com/).
@@ -20,7 +20,7 @@ This PHP application allows users to log in using Google OAuth and access their 
      - `GOOGLE_CLIENT_SECRET`: Your Google Client Secret
      - `GOOGLE_REDIRECT_URI`: The redirect URI (e.g., http://localhost:8000/oauth_callback.php)
 
-4. **Genrate the groups file:**
+4. **Generate the groups file:**
    - Run `php userList.php` to export the users to a CSV file.
    - The CSV file will be downloaded as `user_list.csv`.
    - The CSV file will have the following columns:
@@ -38,7 +38,7 @@ This PHP application allows users to log in using Google OAuth and access their 
      - role
    - Save the file as `roles.csv` in folder `resources`.
 
-5. **Run the Application:**
+6. **Run the Application:**
    - Start a PHP server: `php -S localhost:8000`
    - Open `http://localhost:8000/index.php` in your browser.
 
